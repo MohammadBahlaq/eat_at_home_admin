@@ -53,39 +53,35 @@ class OrderCard extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Order ID: $orderId",
+                  "ORDER ID #$orderId",
                   style: const TextStyle(
                       fontSize: 23, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   "${totalPrice.toStringAsFixed(2)} JD",
                   style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
+                      fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             SizedBox(height: mq.size.height * 0.03),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Date: $date - $time",
-                  style: const TextStyle(fontSize: 16),
-                ),
-                SizedBox(
-                  width: mq.size.width * 0.31,
-                  child: Text(
-                    name,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ),
-              ],
+            Text(
+              "Date: $date - $time \n",
+              style: const TextStyle(fontSize: 20),
+            ),
+            SizedBox(
+              width: mq.size.width * 0.4,
+              child: Text(
+                name,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 20),
+              ),
             ),
             SizedBox(height: mq.size.height * 0.03),
             Row(
