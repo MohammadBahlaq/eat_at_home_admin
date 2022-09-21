@@ -15,6 +15,9 @@ class OrderBuilder extends StatelessWidget {
       child: Selector<OrderController, int>(
         selector: (p0, p1) => p1.orders.length,
         builder: (context, orderLength, child) {
+          // orderController
+          //     .getOrders(orderController.status == "In Progresses" ? 1 : 0);
+
           return orderLength == 0
               ? const Center(child: CircularProgressIndicator())
               : ListView.builder(

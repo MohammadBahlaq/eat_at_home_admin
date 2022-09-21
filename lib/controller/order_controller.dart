@@ -9,13 +9,18 @@ class OrderController with ChangeNotifier {
   List<Order> ordersDone = [];
   String status = "In Progresses";
 
-  Future<void> getOrders(int status) async {
+  Future getOrders(int status) async {
+    print("getOrders");
+    print("length first method : ${orders.length}");
     orders.clear();
     ordersDone.clear();
+    print("length after clear : ${orders.length}");
     String url = "${Data.apiPath}select_bills.php?status=$status";
 
     var response = await http.get(Uri.parse(url));
     var responsebody = jsonDecode(response.body);
+    //notifyListeners();
+    //return responsebody;
 
     if (status == 1) {
       for (var order in responsebody) {
@@ -25,13 +30,15 @@ class OrderController with ChangeNotifier {
             date: order['Date'],
             time: order['Time'],
             status: order['Status'],
-            totalPrice: order['total_price'],
+            totalPrice: order['total_price'].toDouble(),
             userId: order['user_id'],
             name: order['name'],
             mobile: order['mobile'],
           ),
         );
       }
+      print("length after loop : ${orders.length}");
+      //removeDuplicate(orders);
     } else {
       for (var order in responsebody) {
         ordersDone.add(
@@ -40,7 +47,7 @@ class OrderController with ChangeNotifier {
             date: order['Date'],
             time: order['Time'],
             status: order['Status'],
-            totalPrice: order['total_price'],
+            totalPrice: order['total_price'].toDouble(),
             userId: order['user_id'],
             name: order['name'],
             mobile: order['mobile'],
@@ -49,6 +56,20 @@ class OrderController with ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+  void removeDuplicate(List<Order> orders2) {
+    Set<Order> ordersSet = {};
+    ordersSet = orders2.toSet();
+    orders2 = ordersSet.toList();
+
+    // List<int> orders2 = [1, 1, 2, 2, 3, 4, 4];
+    // print("orders2 D: $orders2");
+    // Set<int> ordersSet = {};
+    // ordersSet = orders2.toSet();
+    // print("ordersSet D: $ordersSet");
+    // orders2 = ordersSet.toList();
+    // print("orders2 : $orders2");
   }
 
   Future<void> converStatus(int status, Order order) async {
