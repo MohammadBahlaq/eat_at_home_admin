@@ -19,7 +19,11 @@ class OrderBuilder extends StatelessWidget {
           //     .getOrders(orderController.status == "In Progresses" ? 1 : 0);
 
           return orderLength == 0
-              ? const Center(child: CircularProgressIndicator())
+              ? const Center(
+                  child: Text(
+                  "You don't gave any bill In Progresses",
+                  style: TextStyle(fontSize: 18),
+                ))
               : ListView.builder(
                   itemCount: orderLength,
                   itemBuilder: (context, i) {

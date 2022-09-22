@@ -10,7 +10,6 @@ void main() async {
         ChangeNotifierProvider(create: (context) => OrderController()),
       ],
       builder: (context, child) {
-        print("main Build");
         final OrderController orderController = context.read<OrderController>();
         orderController
             .getOrders(orderController.status == "In Progresses" ? 1 : 0);

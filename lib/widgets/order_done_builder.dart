@@ -16,7 +16,11 @@ class OrderDoneBuilder extends StatelessWidget {
         selector: (p0, p1) => p1.ordersDone.length,
         builder: (context, orderLength, child) {
           return orderLength == 0
-              ? const Center(child: CircularProgressIndicator())
+              ? const Center(
+                  child: Text(
+                  "You don't have any Done bill",
+                  style: TextStyle(fontSize: 18),
+                ))
               : ListView.builder(
                   itemCount: orderLength,
                   itemBuilder: (context, i) {

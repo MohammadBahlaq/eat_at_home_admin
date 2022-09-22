@@ -8,19 +8,20 @@ class OrderController with ChangeNotifier {
   List<Order> orders = [];
   List<Order> ordersDone = [];
   String status = "In Progresses";
+  int loading = 0;
 
   Future getOrders(int status) async {
-    print("getOrders");
-    print("length first method : ${orders.length}");
     orders.clear();
     ordersDone.clear();
-    print("length after clear : ${orders.length}");
-    String url = "${Data.apiPath}select_bills.php?status=$status";
+
+    DateTime date = DateTime.now();
+
+    String url = "${Data.apiPath}select_bills.php?status=$status"
+        "&today=${date.day}/${date.month}/${date.year}&"
+        "yestarday=${date.day - 1}/${date.month}/${date.year}";
 
     var response = await http.get(Uri.parse(url));
     var responsebody = jsonDecode(response.body);
-    //notifyListeners();
-    //return responsebody;
 
     if (status == 1) {
       for (var order in responsebody) {
@@ -37,8 +38,7 @@ class OrderController with ChangeNotifier {
           ),
         );
       }
-      print("length after loop : ${orders.length}");
-      //removeDuplicate(orders);
+      setLoading(1);
     } else {
       for (var order in responsebody) {
         ordersDone.add(
@@ -53,23 +53,11 @@ class OrderController with ChangeNotifier {
             mobile: order['mobile'],
           ),
         );
+        setLoading(1);
       }
     }
+
     notifyListeners();
-  }
-
-  void removeDuplicate(List<Order> orders2) {
-    Set<Order> ordersSet = {};
-    ordersSet = orders2.toSet();
-    orders2 = ordersSet.toList();
-
-    // List<int> orders2 = [1, 1, 2, 2, 3, 4, 4];
-    // print("orders2 D: $orders2");
-    // Set<int> ordersSet = {};
-    // ordersSet = orders2.toSet();
-    // print("ordersSet D: $ordersSet");
-    // orders2 = ordersSet.toList();
-    // print("orders2 : $orders2");
   }
 
   Future<void> converStatus(int status, Order order) async {
@@ -97,5 +85,10 @@ class OrderController with ChangeNotifier {
   Future<void> setStatus(String value) async {
     status = value;
     await getOrders(status == "In Progresses" ? 1 : 0);
+  }
+
+  void setLoading(int loading) {
+    this.loading = loading;
+    notifyListeners();
   }
 }
