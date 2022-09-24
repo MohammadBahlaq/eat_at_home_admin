@@ -19,40 +19,46 @@ class Home extends StatelessWidget {
       body: Selector<OrderController, String>(
         selector: (p0, p1) => p1.status,
         builder: (context, status, child) {
-          return Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                  top: mq.size.height * 0.013,
-                  right: mq.size.width * 0.03,
-                  left: mq.size.width * 0.03,
+          return SizedBox(
+            height: 2000,
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: mq.size.height * 0.013,
+                    right: mq.size.width * 0.03,
+                    left: mq.size.width * 0.03,
+                  ),
+                  child: DropdownButton(
+                    isExpanded: true,
+                    value: status,
+                    items: ["In Progresses", "Done"]
+                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                        .toList(),
+                    onChanged: (value) async {
+                      orderController.setLoading(0);
+                      await orderController.setStatus(value!);
+                      orderController.setLoading(1);
+                    },
+                  ),
                 ),
-                child: DropdownButton(
-                  isExpanded: true,
-                  value: status,
-                  items: ["In Progresses", "Done"]
-                      .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                      .toList(),
-                  onChanged: (value) async {
-                    orderController.setLoading(0);
-                    await orderController.setStatus(value!);
-                    orderController.setLoading(1);
+                Selector<OrderController, int>(
+                  selector: (p0, p1) => p1.loading,
+                  builder: (context, loading, child) {
+                    if (orderController.loading == 0) {
+                      return SizedBox(
+                        height: mq.size.height * 0.7,
+                        child: const Center(child: CircularProgressIndicator()),
+                      );
+                    } else {
+                      return orderController.status == "In Progresses"
+                          ? const OrderBuilder()
+                          : const OrderDoneBuilder();
+                    }
                   },
                 ),
-              ),
-              Selector<OrderController, int>(
-                selector: (p0, p1) => p1.loading,
-                builder: (context, loading, child) {
-                  if (orderController.loading == 0) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else {
-                    return orderController.status == "In Progresses"
-                        ? const OrderBuilder()
-                        : const OrderDoneBuilder();
-                  }
-                },
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),
